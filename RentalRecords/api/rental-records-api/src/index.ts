@@ -12,7 +12,7 @@
  */
 
 import { inject } from '@angular/core';
-import { User, Property, CreateProperty, Ledger, CreateLedger } from "../../../src/objects"
+import { User, Property, Ledger } from "../../../src/objects"
 
 function json(data: unknown, init: ResponseInit = {}): Response {
 	return new Response(JSON.stringify(data), {
