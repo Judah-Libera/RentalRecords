@@ -1,0 +1,25 @@
+.property-card {
+  cursor: pointer;
+  box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.1);
+  transition: transform 180ms ease, box-shadow 180ms ease, background-color 180ms ease;
+}
+
+  .property-card:hover,
+  .property-card:focus-visible {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, .16);
+  }
+
+.property-card-chevron {
+  font-size: .75rem;
+  transition: transform 180ms ease;
+}
+
+.property-card:hover .property-card-chevron,
+.property-card:focus-visible .property-card-chevron {
+  transform: translateX(4px);
+}
+
+.modal {
+  font-size: 80%;
+}

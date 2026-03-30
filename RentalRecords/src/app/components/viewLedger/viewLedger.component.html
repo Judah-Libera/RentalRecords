@@ -1,0 +1,72 @@
+@let ledger = ledgerService.ledgerList() ?? [];
+
+<header class="bg-body-tertiary border-bottom">
+  <div class="container py-4">
+    <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+      <div>
+        <h1 class="h3 mb-1">Ledger</h1>
+        <div class="small text-body-secondary">All entries for the selected property</div>
+      </div>
+
+      <button type="button"
+              class="btn btn-outline-danger"
+              (click)="deleteCurrentYearMortgage()">
+        Delete this year’s mortgages
+      </button>
+    </div>
+  </div>
+</header>
+
+<main class="container py-4">
+  <div class="card border-0 shadow-sm">
+    <div class="card-body">
+
+      <div class="d-flex align-items-center justify-content-between">
+        <div class="small text-body-secondary">Total ({{ year }})</div>
+        <div class="h5 mb-0">{{ totalThisYear() | number:'1.2-2' }}</div>
+      </div>
+      <hr class="my-3" />
+
+      @if (ledger.length) {
+      <div class="list-group list-group-flush">
+        @for (item of ledger; track item.id) {
+        <div class="list-group-item px-0" [class.futureItem]="item.date > todayIso">
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <div class="min-w-0">
+              <div class="d-flex align-items-center gap-2 flex-wrap">
+                @if (item.type.startsWith('income:')) {
+                <span class="badge text-bg-success-subtle border text-success">Income</span>
+                } @else {
+                <span class="badge text-bg-danger-subtle border text-danger">Expense</span>
+                }
+
+                <span class="text-body fw-semibold">
+                  {{ item.type.split(':').slice(1).join(':') }}
+                </span>
+
+                <span class="small text-body-secondary">
+                  {{ item.date | date:'MM-dd-yyyy' }}
+                </span>
+              </div>
+            </div>
+
+            <div class="d-flex align-items-center gap-2">
+              <span class="fw-semibold">
+                {{ item.amount | number:'1.2-2' }}
+              </span>
+              <button type="button"
+                      class="btn btn-sm btn-outline-secondary"
+                      (click)="delete(item.id)">
+                Delete
+              </button>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+      } @else {
+      <div class="text-body-secondary">No entries.</div>
+      }
+    </div>
+  </div>
+</main>

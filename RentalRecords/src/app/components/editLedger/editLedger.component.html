@@ -1,0 +1,269 @@
+<form [formGroup]="form">
+  <header class="bg-body-tertiary border-bottom">
+    <div class="container py-4">
+      <div class="d-flex flex-wrap align-items-end justify-content-between gap-3">
+        <div>
+          <h1 class="h3 mb-1">Edit Ledger</h1>
+          <div class="small text-body-secondary">Add income and expenses for a specific date</div>
+        </div>
+
+        <div class="d-flex align-items-end gap-2">
+          <div>
+            <label class="form-label mb-1" for="ledgerDate">Date</label>
+            <input id="ledgerDate" type="date" class="form-control" formControlName="date" />
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="container py-4">
+    <div class="row g-4">
+      <!-- Income -->
+      <div class="col-12 col-lg-6" formGroupName="income">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h2 class="h5 mb-0">Income</h2>
+            </div>
+
+            <div class="d-grid gap-3">
+              <!-- Rent -->
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Rent</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="rent"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addRent()"
+                          [disabled]="!form.controls.income.controls.rent.value">
+                    Add rent
+                  </button>
+                </div>
+              </div>
+
+              <!-- Deposit -->
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Deposit</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="deposit"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addIncomeDeposit()"
+                          [disabled]="!form.controls.income.controls.deposit.value">
+                    Add deposit
+                  </button>
+                </div>
+              </div>
+
+              <!-- Other -->
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Other</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="other"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addIncomeOther()"
+                          [disabled]="!form.controls.income.controls.other.value">
+                    Add other
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Expenses -->
+      <div class="col-12 col-lg-6" formGroupName="expenses">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+              <h2 class="h5 mb-0">Expenses</h2>
+            </div>
+
+            <div class="d-grid gap-3">
+              <!-- Bills -->
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Bills</label>
+                  <select class="form-select" formControlName="billType">
+                    @for (opt of billOptions; track opt.value) {
+                    <option [value]="opt.value">{{ opt.label }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Amount</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="billAmount"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addBill()"
+                          [disabled]="!form.controls.expenses.controls.billAmount.value">
+                    Add bill
+                  </button>
+                </div>
+              </div>
+
+              <!-- Mortgage -->
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Mortgage</label>
+                  <select class="form-select" formControlName="mortgageType">
+                    @for (opt of mortgageOptions; track opt.value) {
+                    <option [value]="opt.value">{{ opt.label }}</option>
+                    }
+                  </select>
+                </div>
+
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Amount</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="mortgageAmount"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+
+                <div class="col-12">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addMortgage()"
+                          [disabled]="!form.controls.expenses.controls.mortgageAmount.value">
+                    Add mortgage
+                  </button>
+                </div>
+              </div>
+
+              <hr class="my-1" />
+
+              <!-- Deposit / Repairs / Other -->
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Deposit</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="deposit"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addExpenseDeposit()"
+                          [disabled]="!form.controls.expenses.controls.deposit.value">
+                    Add deposit
+                  </button>
+                </div>
+              </div>
+
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Repairs</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="repairs"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addRepairs()"
+                          [disabled]="!form.controls.expenses.controls.repairs.value">
+                    Add repairs
+                  </button>
+                </div>
+              </div>
+
+              <div class="row g-2 align-items-end">
+                <div class="col-12 col-sm-6">
+                  <label class="form-label mb-1">Other</label>
+                  <div class="input-group">
+                    <span class="input-group-text">$</span>
+                    <input type="number"
+                           class="form-control"
+                           formControlName="other"
+                           inputmode="decimal"
+                           min="0"
+                           step="0.01"
+                           placeholder="0.00" />
+                  </div>
+                </div>
+                <div class="col-12 col-sm-6">
+                  <button type="button"
+                          class="btn btn-outline-primary w-100"
+                          (click)="addExpenseOther()"
+                          [disabled]="!form.controls.expenses.controls.other.value">
+                    Add other
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</form>

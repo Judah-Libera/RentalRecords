@@ -1,0 +1,35 @@
+<main class="min-vh-100 d-flex align-items-center bg-light">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-12 col-sm-10 col-md-7 col-lg-5 col-xl-4">
+        <div class="card shadow-sm">
+          <div class="card-body p-4">
+            <div class="text-center mb-4">
+              <h1 class="h3">Rental Records</h1>
+            </div>
+
+            <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+              <div class="mb-3">
+                <label for="login" class="form-label">Login</label>
+                <input id="login"
+                       type="text"
+                       class="form-control"
+                       formControlName="login"
+                       autocomplete="username"
+                       autofocus />
+              </div>
+
+              <div class="d-grid">
+                <button type="submit"
+                        class="btn btn-primary"
+                        [disabled]="form.invalid">
+                  Log in
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

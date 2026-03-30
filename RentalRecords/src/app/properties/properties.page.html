@@ -1,0 +1,115 @@
+@let properties = propertiesService.properties.value();
+@let activeProperty = propertiesService.activeProperty();
+
+<header class="bg-body-tertiary border-bottom">
+  <div class="container py-4">
+    <div class="d-flex align-items-center justify-content-between">
+      <div>
+        <h1 class="h3 mb-1">Properties</h1>
+        <div class="small text-body-secondary">Select a property to open details</div>
+      </div>
+
+
+      <button type="button" class="btn btn-primary" (click)="openCreateModal()">
+        Add new
+      </button>
+
+    </div>
+  </div>
+</header>
+
+<main class="container py-4">
+  @if (properties?.length) {
+  <div class="row g-3">
+    @for (property of properties; track property.id) {
+    <div class="col-12 col-md-6">
+      <button type="button"
+              class="card property-card text-start h-100 w-100 border-0"
+              (click)="openProperty(property)">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between gap-3">
+            <div class="min-w-0">
+              <div class="d-flex align-items-baseline gap-4 flex-wrap">
+                <div class="fw-semibold text-body">#{{ property.number }}</div>
+                <div class="text-body-secondary">{{ property.address }}</div>
+              </div>
+            </div>
+
+            <i class="bi bi-chevron-right property-card-chevron text-body-secondary" aria-hidden="true"></i>
+          </div>
+        </div>
+      </button>
+    </div>
+    }
+  </div>
+  } @else if (properties) {
+  <div class="alert alert-light border mb-0">
+    No properties found.
+  </div>
+  }
+</main>
+
+@if (activeProperty) {
+<div class="modal-backdrop fade show" (click)="closeModal()"></div>
+
+<div class="modal fade show"
+     tabindex="-1"
+     role="dialog"
+     aria-modal="true"
+     style="display: block"
+     (click)="closeModal()">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-lg-down" role="document" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title h5 mb-0">{{ activeProperty.number }} {{activeProperty.address}}</h2>
+        <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+      </div>
+
+      <div class="modal-body">
+        <app-edit-ledger></app-edit-ledger>
+        <hr />
+        <app-view-ledger></app-view-ledger>
+      </div>
+    </div>
+  </div>
+</div>
+}
+
+@if (createModalOpen())
+{
+  <div class="modal-backdrop fade show" (click)="closeModal()"></div>
+
+  <div class="modal fade show"
+       tabindex="-1"
+       role="dialog"
+       aria-modal="true"
+       style="display: block"
+       (click)="closeCreateModal()">
+    <div class="modal-dialog modal-xl modal-dialog-centered modal-fullscreen-lg-down" role="document" (click)="$event.stopPropagation()">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2 class="modal-title h5 mb-0">Add New Property</h2>
+          <button type="button" class="btn-close" aria-label="Close" (click)="closeCreateModal()"></button>
+        </div>
+
+        <form class="modal-body" [formGroup]="createForm" (ngSubmit)="createNewProperty()">
+          <div class="mb-3">
+            <label class="form-label" for="propertyNumber">House number</label>
+            <input id="propertyNumber" type="text" class="form-control" formControlName="number" />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="propertyAddress">Address</label>
+            <input id="propertyAddress" type="text" class="form-control" formControlName="address" />
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-primary" [disabled]="createForm.invalid">
+              Create property
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+}

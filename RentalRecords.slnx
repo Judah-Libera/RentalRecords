@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="RentalRecords/RentalRecords.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+</Solution>
