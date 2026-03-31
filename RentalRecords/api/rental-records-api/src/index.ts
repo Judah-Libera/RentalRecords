@@ -17,6 +17,7 @@ function withCors(request: Request, response: Response): Response {
 		'http://127.0.0.1:50542',
 		'http://localhost:50542',
 		'https://rental-records-api.judahlibera.workers.dev',
+		'https://rentalrecords.judahlibera.workers.dev',
 	]);
 
 	if (!origin || !allowedOrigins.has(origin)) return response;
