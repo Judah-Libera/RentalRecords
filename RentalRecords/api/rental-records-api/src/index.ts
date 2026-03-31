@@ -16,7 +16,7 @@ function withCors(request: Request, response: Response): Response {
 	const allowedOrigins = new Set<string>([
 		'http://127.0.0.1:50542',
 		'http://localhost:50542',
-		'https://rentalrecords.judahlibera.workers.dev',
+		'https://rental-records-api.judahlibera.workers.dev',
 	]);
 
 	if (!origin || !allowedOrigins.has(origin)) return response;
