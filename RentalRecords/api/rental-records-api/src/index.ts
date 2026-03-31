@@ -22,6 +22,30 @@ function json(data: unknown, init: ResponseInit = {}): Response {
 		},
 	});
 }
+function withCors(request: Request, response: Response): Response {
+	const origin = request.headers.get('Origin');
+
+	// Add any additional UI origins here (prod custom domain, Pages domain, etc.)
+	const allowedOrigins = new Set<string>([
+		'http://127.0.0.1:50542', // ng serve (from angular.json)
+		'http://localhost:50542',
+	]);
+
+	if (!origin || !allowedOrigins.has(origin)) return response;
+
+	const headers = new Headers(response.headers);
+	headers.set('Access-Control-Allow-Origin', origin);
+	headers.set('Vary', 'Origin');
+	headers.set('Access-Control-Allow-Methods', 'GET,POST,DELETE,OPTIONS');
+	headers.set('Access-Control-Allow-Headers', 'Content-Type');
+	headers.set('Access-Control-Max-Age', '86400');
+
+	return new Response(response.body, {
+		status: response.status,
+		statusText: response.statusText,
+		headers,
+	});
+}
 function notFound(): Response {
 	return json({ error: 'Not found' }, { status: 404 });
 }
@@ -39,6 +63,8 @@ export default {
 	async fetch(request, env): Promise<Response> {
 		const url = new URL(request.url);
 		const parts = getPathParts(url);
+
+		let response: Response;
 
 		// Expect /api/...
 		if (parts[0] !== 'api') return notFound();
@@ -58,7 +84,7 @@ export default {
 
 			if (!user) return json({ error: 'User not found' }, { status: 404 });
 
-			return json(user);
+			response = json(user);
 		}
 
 		// /api/properties/:userId
@@ -74,7 +100,7 @@ export default {
 					.bind(userId)
 					.all<Property>();
 
-				return json(result.results ?? []);
+				response = json(result.results ?? []);
 			}
 
 			// POST /api/properties
@@ -96,10 +122,10 @@ export default {
 					.bind(id, userId, number, address)
 					.run();
 
-				return json({ id, userId, number, address }, { status: 201 });
+				response = json({ id, userId, number, address }, { status: 201 });
 			}
 
-			return methodNotAllowed();
+			response = methodNotAllowed();
 		}
 
 		if (parts[1] === 'ledger') {
@@ -114,7 +140,7 @@ export default {
 					.bind(propertyId)
 					.all<Ledger>();
 
-				return json(result.results ?? []);
+				response =  json(result.results ?? []);
 			}
 
 			// DELETE /api/ledger/:id
@@ -127,7 +153,7 @@ export default {
 					.bind(id)
 					.run();
 
-				return new Response(null, { status: 204 });
+				response = new Response(null, { status: 204 });
 			}
 
 			// DELETE /api/ledger/
@@ -163,7 +189,7 @@ export default {
 				}
 
 				await env.DB.prepare(sql).bind(...bindParams).run();
-				return new Response(null, { status: 204 });
+				response = new Response(null, { status: 204 });
 			}
 
 			// POST /api/ledger
@@ -195,12 +221,14 @@ export default {
 					.bind(id, propertyId, userId, date, type, amount)
 					.run();
 
-				return json({ id, propertyId, userId, date, type, amount }, { status: 201 });
+				response = json({ id, propertyId, userId, date, type, amount }, { status: 201 });
 			}
 
-			return methodNotAllowed();
+			response = methodNotAllowed();
 		}
 
-		return notFound();
+		response = notFound();
+
+		return withCors(request, response);
 	},
 } satisfies ExportedHandler<Env>;
