@@ -11,7 +11,6 @@
  * Learn more at https://developers.cloudflare.com/workers/
  */
 
-import { inject } from '@angular/core';
 import { User, Property, Ledger } from "../../../src/objects"
 
 function json(data: unknown, init: ResponseInit = {}): Response {
