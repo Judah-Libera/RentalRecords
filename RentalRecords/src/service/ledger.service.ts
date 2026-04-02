@@ -45,6 +45,25 @@ export class LedgerService {
     this.add({ date, amount, type: 'expense:other' });
   }
 
+  filterLedger(
+    list: readonly Ledger[] | null | undefined,
+    options?: {
+      year?: number;
+      type?: LedgerType;
+    }
+  ): Ledger[] {
+    const year = options?.year;
+    const type = options?.type;
+
+    return (list ?? []).filter(item => {
+      const itemYear = Number.parseInt(item.date.slice(0, 4), 10);
+      const matchesYear = year === undefined || itemYear === year;
+      const matchesType = type === undefined || item.type === type;
+
+      return matchesYear && matchesType;
+    });
+  }
+
   private add(input: { date: string; type: LedgerType; amount: number }): void {
     const propertyId = this.activePropertyId();
     if (!propertyId) throw new Error('No active property selected.');
