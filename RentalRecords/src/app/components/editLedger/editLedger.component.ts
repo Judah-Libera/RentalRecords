@@ -33,6 +33,7 @@ export class EditLedgerComponent {
 
   readonly form = this.fb.group({
     date: this.fb.control<string>(this.todayIso(), { nonNullable: true, validators: [Validators.required] }),
+    description: this.fb.control<string | null>(null),
 
     income: this.fb.group({
       rent: this.fb.control<number | null>(null, [Validators.min(0)]),
@@ -57,24 +58,27 @@ export class EditLedgerComponent {
     const amount = this.form.controls.income.controls.rent.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.incomeRent(this.form.controls.date.value, amount);
+    this.ledgerService.incomeRent(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.income.controls.rent.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addIncomeDeposit(): void {
     const amount = this.form.controls.income.controls.deposit.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.incomeDeposit(this.form.controls.date.value, amount);
+    this.ledgerService.incomeDeposit(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.income.controls.deposit.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addIncomeOther(): void {
     const amount = this.form.controls.income.controls.other.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.incomeOther(this.form.controls.date.value, amount);
+    this.ledgerService.incomeOther(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.income.controls.other.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addBill(): void {
@@ -82,8 +86,9 @@ export class EditLedgerComponent {
     const amount = this.form.controls.expenses.controls.billAmount.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.expenseBill(this.form.controls.date.value, type, amount);
+    this.ledgerService.expenseBill(this.form.controls.date.value, this.form.controls.description.value, type, amount);
     this.form.controls.expenses.controls.billAmount.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addMortgage(): void {
@@ -92,42 +97,46 @@ export class EditLedgerComponent {
     if (!this.canSubmitAmount(amount)) return;
 
     if (type === 'single') {
-      this.ledgerService.expenseMortgage(this.form.controls.date.value, amount);
+      this.ledgerService.expenseMortgage(this.form.controls.date.value, this.form.controls.description.value, amount);
     }
     else if (type === 'monthly') {
       const thisYear = new Date().getFullYear();
       for (let month = 0; month < 12; month++) {
         const d = new Date(thisYear, month, 1); // local time
         const iso = d.toISOString().slice(0, 10);
-        this.ledgerService.expenseMortgage(iso, amount);
+        this.ledgerService.expenseMortgage(iso, null, amount);
       }
     }
     
     this.form.controls.expenses.controls.mortgageAmount.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addExpenseDeposit(): void {
     const amount = this.form.controls.expenses.controls.deposit.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.expenseDeposit(this.form.controls.date.value, amount);
+    this.ledgerService.expenseDeposit(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.expenses.controls.deposit.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addRepairs(): void {
     const amount = this.form.controls.expenses.controls.repairs.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.expenseRepair(this.form.controls.date.value, amount);
+    this.ledgerService.expenseRepair(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.expenses.controls.repairs.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   addExpenseOther(): void {
     const amount = this.form.controls.expenses.controls.other.value;
     if (!this.canSubmitAmount(amount)) return;
 
-    this.ledgerService.expenseOther(this.form.controls.date.value, amount);
+    this.ledgerService.expenseOther(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.expenses.controls.other.setValue(null);
+    this.form.controls.description.setValue(null);
   }
 
   private canSubmitAmount(amount: number | null): amount is number {

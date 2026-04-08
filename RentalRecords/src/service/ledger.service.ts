@@ -13,36 +13,36 @@ export class LedgerService {
 
   readonly activePropertyId = computed(() => this.propertiesService.activeProperty()?.id ?? null);
 
-  incomeRent(date: string, amount: number): void {
-    this.add({ date, amount, type: 'income:rent' });
+  incomeRent(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: 'income:rent' });
   }
 
-  incomeDeposit(date: string, amount: number): void {
-    this.add({ date, amount, type: 'income:deposit' });
+  incomeDeposit(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: 'income:deposit' });
   }
 
-  incomeOther(date: string, amount: number): void {
-    this.add({ date, amount, type: 'income:other' });
+  incomeOther(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: 'income:other' });
   }
 
-  expenseBill(date: string, billType: BillType, amount: number): void {
-    this.add({ date, amount, type: `expense:bill:${billType}` });
+  expenseBill(date: string, description: string | null, billType: BillType, amount: number): void {
+    this.add({ date, description, amount, type: `expense:bill:${billType}` });
   }
 
-  expenseMortgage(date: string, amount: number): void {
-    this.add({ date, amount, type: `expense:mortgage` });
+  expenseMortgage(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: `expense:mortgage` });
   }
 
-  expenseDeposit(date: string, amount: number): void {
-    this.add({ date, amount, type: 'expense:deposit' });
+  expenseDeposit(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: 'expense:deposit' });
   }
 
-  expenseRepair(date: string, amount: number): void {
-    this.add({ date, amount, type: 'expense:repair' });
+  expenseRepair(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: 'expense:repair' });
   }
 
-  expenseOther(date: string, amount: number): void {
-    this.add({ date, amount, type: 'expense:other' });
+  expenseOther(date: string, description: string | null, amount: number): void {
+    this.add({ date, description, amount, type: 'expense:other' });
   }
 
   filterLedger(
@@ -64,7 +64,7 @@ export class LedgerService {
     });
   }
 
-  private add(input: { date: string; type: LedgerType; amount: number }): void {
+  private add(input: { date: string; description: string | null; type: LedgerType; amount: number }): void {
     const propertyId = this.activePropertyId();
     if (!propertyId) throw new Error('No active property selected.');
     const userId = this.userService.user.value()?.id;
@@ -74,6 +74,7 @@ export class LedgerService {
       propertyId,
       userId,
       date: input.date,
+      description: input.description,
       type: input.type,
       amount: input.amount,
     };

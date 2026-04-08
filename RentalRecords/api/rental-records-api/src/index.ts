@@ -171,6 +171,7 @@ export default {
 				const propertyId = body.propertyId as string;
 				const userId = body.userId as string;
 				const date = body.date as string;
+				const description = body.description as string;
 				const type = body.type as string;
 				let amount = body.amount as number;
 
@@ -184,11 +185,11 @@ export default {
 				else if (type.startsWith('income:')) amount = Math.abs(amount);
 
 				await env.DB
-					.prepare('INSERT INTO ledger (id, propertyId, userId, date, type, amount) VALUES (?1, ?2, ?3, ?4, ?5, ?6)')
-					.bind(id, propertyId, userId, date, type, amount)
+					.prepare('INSERT INTO ledger (id, propertyId, userId, date, description, type, amount) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7)')
+					.bind(id, propertyId, userId, date, description, type, amount)
 					.run();
 
-				return withCors(request, json({ id, propertyId, userId, date, type, amount }, { status: 201 }));
+				return withCors(request, json({ id, propertyId, userId, date, description, type, amount }, { status: 201 }));
 			}
 
 			return withCors(request, methodNotAllowed());

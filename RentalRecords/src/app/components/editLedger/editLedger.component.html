@@ -105,7 +105,18 @@
             </div>
           </div>
         </div>
+        <!-- Description -->
+        <div class="col-12 mt-4">
+          <label class="form-label mb-1" for="incomeDescription">Description</label>
+          <textarea id="incomeDescription"
+                    class="form-control"
+                    [formControl]="form.controls.description"
+                    rows="2"
+                    placeholder="Enter a description"></textarea>
+        </div>
       </div>
+
+      
 
       <!-- Expenses -->
       <div class="col-12 col-lg-6" formGroupName="expenses">

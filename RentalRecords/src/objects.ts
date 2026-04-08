@@ -27,6 +27,7 @@ export interface Ledger {
   propertyId: string;
   userId: string;
   date: string; // ISO yyyy-mm-dd
+  description: string | null;
   type: LedgerType;
   amount: number;
 }
