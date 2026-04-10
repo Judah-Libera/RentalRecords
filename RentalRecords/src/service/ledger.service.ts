@@ -54,14 +54,25 @@ export class LedgerService {
   ): Ledger[] {
     const year = options?.year;
     const type = options?.type;
+    const todayIso = new Date().toISOString().slice(0, 10);
 
-    return (list ?? []).filter(item => {
-      const itemYear = Number.parseInt(item.date.slice(0, 4), 10);
-      const matchesYear = year === undefined || itemYear === year;
-      const matchesType = type === undefined || item.type === type;
+    return (list ?? [])
+      .filter(item => {
+        const itemYear = Number.parseInt(item.date.slice(0, 4), 10);
+        const matchesYear = year === undefined || itemYear === year;
+        const matchesType = type === undefined || item.type === type;
 
-      return matchesYear && matchesType;
-    });
+        return matchesYear && matchesType;
+      })
+      .sort((a, b) => {
+        const aIsFuture = a.date > todayIso;
+        const bIsFuture = b.date > todayIso;
+
+        if (aIsFuture !== bIsFuture) {
+          return aIsFuture ? 1 : -1;
+        }
+        return b.date.localeCompare(a.date);
+      });
   }
 
   private add(input: { date: string; description: string | null; type: LedgerType; amount: number }): void {
