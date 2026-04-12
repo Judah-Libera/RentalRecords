@@ -57,7 +57,7 @@ export class EditLedgerComponent {
   addRent(): void {
     const amount = this.form.controls.income.controls.rent.value;
     if (!this.canSubmitAmount(amount)) return;
-
+    console.log('editledger description', this.form.controls.description.value);///////////////
     this.ledgerService.incomeRent(this.form.controls.date.value, this.form.controls.description.value, amount);
     this.form.controls.income.controls.rent.setValue(null);
     this.form.controls.description.setValue(null);

@@ -14,6 +14,7 @@ export class LedgerService {
   readonly activePropertyId = computed(() => this.propertiesService.activeProperty()?.id ?? null);
 
   incomeRent(date: string, description: string | null, amount: number): void {
+    console.log('service description', description);///////////////
     this.add({ date, description, amount, type: 'income:rent' });
   }
 
@@ -89,7 +90,8 @@ export class LedgerService {
       type: input.type,
       amount: input.amount,
     };
-
+    console.log('service add description', input.description);///////////////
+    console.log('sent to client description', entry.description);///////////////
     this.httpClient
       .post<void>(`${env.apiBaseUrl}/ledger`, entry)
       .subscribe({

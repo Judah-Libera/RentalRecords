@@ -4,4 +4,4 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 # commands
 run web: ng serve
-run db: npx wrangler dev --remote
+run db: npx wrangler dev --remote // from /api/rental-records-api directory
